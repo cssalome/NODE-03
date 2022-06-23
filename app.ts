@@ -63,3 +63,9 @@ server.listen(port, () => {
   // always want to know when the server is done starting up
   console.log(runningMessage);
 });
+
+// ...
+import { AuthRoutes } from "./auth/auth.routes.config";
+// ...
+routes.push(new AuthRoutes(app)); // independent: can go before or after UsersRoute
+// ...
