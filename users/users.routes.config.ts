@@ -17,7 +17,13 @@ export class UsersRoutes extends CommonRoutesConfig {
   configureRoutes(): express.Application {
     this.app
       .route(`/users`)
-      .get(UsersController.listUsers)
+      .get(
+        jwtMiddleware.validJWTNeeded,
+        permissionMiddleware.permissionFlagRequired(
+          PermissionFlag.ADMIN_PERMISSION
+        ),
+        UsersController.listUsers
+      )
       .post(
         UsersMiddleware.validateRequiredUserBodyFields,
         body("email").isEmail(),
@@ -74,16 +80,6 @@ export class UsersRoutes extends CommonRoutesConfig {
         PermissionFlag.PAID_PERMISSION
       ),
     ]);
-
-    this.app
-      .route(`/users`)
-      .get(
-        jwtMiddleware.validJWTNeeded,
-        permissionMiddleware.permissionFlagRequired(
-          PermissionFlag.ADMIN_PERMISSION
-        ),
-        UsersController.listUsers
-      );
 
     return this.app;
   }
